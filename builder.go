@@ -7,8 +7,7 @@ import (
 	"github.com/gentlemanautomaton/structformat/internal/fieldpadding"
 )
 
-// A Builder is used to efficiently produce a formatted string for a struct
-// using [Builder.Write] methods.
+// A Builder is used to efficiently produce a formatted string for a struct.
 //
 // The zero value is ready to use. Do not copy a non-zero Builder.
 type Builder struct {
@@ -35,9 +34,19 @@ func (b *Builder) String() string {
 	return b.builder.String()
 }
 
-// Divide divides any subsequent fields from any preceeding fields by a colon.
-func (b *Builder) Divide() {
-	b.divided = true
+// WritePrimary writes a primary field to the builder.
+func (b *Builder) WritePrimary(value string, opts ...fieldformat.Option) {
+	b.WriteField(value, append([]fieldformat.Option{fieldformat.Primary}, opts...)...)
+}
+
+// WriteStandard writes a standard field to the builder.
+func (b *Builder) WriteStandard(value string, opts ...fieldformat.Option) {
+	b.WriteField(value, append([]fieldformat.Option{fieldformat.Standard}, opts...)...)
+}
+
+// WriteNote writes a note field to the builder.
+func (b *Builder) WriteNote(value string, opts ...fieldformat.Option) {
+	b.WriteField(value, append([]fieldformat.Option{fieldformat.Note}, opts...)...)
 }
 
 // WriteField writes a field to the builder.
@@ -132,6 +141,11 @@ func (b *Builder) WriteField(value string, opts ...fieldformat.Option) {
 		b.builder.WriteString(padding.String())
 		b.builder.WriteString(value)
 	}
+}
+
+// Divide divides any subsequent fields from any preceeding fields by a colon.
+func (b *Builder) Divide() {
+	b.divided = true
 }
 
 func (b *Builder) prepareFor(next fieldformat.Type) {
