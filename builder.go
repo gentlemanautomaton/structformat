@@ -112,6 +112,9 @@ func (b *Builder) WriteField(value string, opts ...fieldformat.Option) {
 	b.lastSkipped = fieldformat.DefaultType
 	b.skipped = 0
 
+	// Reset the divided state.
+	b.divided = false
+
 	// Write the field label, if present.
 	if field.Label != "" {
 		b.builder.WriteString(field.Label)
