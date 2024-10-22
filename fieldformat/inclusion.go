@@ -11,8 +11,7 @@ func (i Inclusion) Apply(ref *Options) {
 	ref.Include = bool(i)
 }
 
-// Options will return a set of options with the field format inclusion
-// applied to them.
+// Options returns a set of field format options with the inclusion.
 func (i Inclusion) Options() (opts Options) {
 	i.Apply(&opts)
 	return

@@ -11,8 +11,7 @@ func (e Exclusion) Apply(ref *Options) {
 	ref.Exclude = bool(e)
 }
 
-// Options will return a set of options with the field format exclusion
-// applied to them.
+// Options returns a set of field format options with the exclusion.
 func (e Exclusion) Options() (opts Options) {
 	e.Apply(&opts)
 	return

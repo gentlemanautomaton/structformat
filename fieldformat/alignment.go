@@ -19,8 +19,7 @@ func (a Alignment) Apply(ref *Options) {
 	ref.Alignment = a
 }
 
-// Options will return a set of options with the field format alignment
-// applied to them.
+// Options returns a set of field format options with the alignment.
 func (a Alignment) Options() (opts Options) {
 	a.Apply(&opts)
 	return
