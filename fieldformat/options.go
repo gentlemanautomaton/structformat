@@ -1,5 +1,7 @@
 package fieldformat
 
+import "strconv"
+
 // Option is an interface for type that can apply themselves to field
 // format options.
 type Option interface {
@@ -31,6 +33,18 @@ type Options struct {
 	// the minimum width. If an empty string is specified, the default padding
 	// character (a space) will be used.
 	Padding string
+}
+
+// Combine combines the given set of options.
+//
+// If there is a conflict for a particular option, the last definition for the
+// option wins.
+func Combine(opts ...Option) Options {
+	var combined Options
+	for _, opt := range opts {
+		opt.Apply(&combined)
+	}
+	return combined
 }
 
 // AdjustWidth ensures that opt.Width is at least width.
@@ -65,14 +79,49 @@ func (opts Options) Apply(ref *Options) {
 	}
 }
 
-// Combine combines the given set of options.
-//
-// If there is a conflict for a particular option, the last definition for the
-// option wins.
-func Combine(opts ...Option) Options {
-	var combined Options
-	for _, opt := range opts {
-		opt.Apply(&combined)
+// String returns a string representation of the options.
+func (opts Options) String() string {
+	var out string
+
+	// Label
+	if opts.Label != "" {
+		out += "L"
 	}
-	return combined
+
+	// Type
+	switch opts.Type {
+	case Primary:
+		out += "P"
+	case Standard:
+		out += "S"
+	case Note:
+		out += "N"
+	default:
+		out += "D"
+	}
+
+	// Include
+	if opts.Include {
+		out += "I"
+	}
+
+	// Exclude
+	if opts.Exclude {
+		out += "E"
+	}
+
+	// Alignment
+	switch opts.Alignment {
+	case Left:
+		out += "L"
+	case Right:
+		out += "R"
+	}
+
+	// Width
+	if opts.Width > 0 {
+		out += "W" + strconv.Itoa(opts.Width)
+	}
+
+	return out
 }
