@@ -37,6 +37,10 @@ type Options struct {
 	// the minimum width. If an empty string is specified, the default padding
 	// character (a space) will be used.
 	Padding string
+
+	// Transform is a field value transformation function that will be applied
+	// to a field's value.
+	Transform func(fieldValue string) string
 }
 
 // Combine combines the given set of options.
@@ -83,6 +87,9 @@ func (opts Options) Apply(ref *Options) {
 	}
 	if opts.Padding != "" {
 		ref.Padding = opts.Padding
+	}
+	if opts.Transform != nil {
+		ref.Transform = opts.Transform
 	}
 }
 
@@ -133,6 +140,11 @@ func (opts Options) String() string {
 	// Indent
 	if opts.Indent > 0 {
 		out += "I" + strconv.Itoa(opts.Indent)
+	}
+
+	// Transform
+	if opts.Transform != nil {
+		out += "T"
 	}
 
 	return out

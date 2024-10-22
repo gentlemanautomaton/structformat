@@ -116,7 +116,7 @@ func Example() {
 	allWithBlocks := PersonFormat{
 		ID:     fieldformat.Combine(fieldformat.Block, fieldformat.Indent(2), fieldformat.Label("ID")),
 		Age:    fieldformat.Combine(fieldformat.Block, fieldformat.Indent(2), fieldformat.Label("Age")),
-		Email:  fieldformat.Note.Options(),
+		Email:  fieldformat.Combine(fieldformat.Standard, fieldformat.Wrap("<", ">")),
 		Status: fieldformat.Combine(fieldformat.Block, fieldformat.Indent(2), fieldformat.Label("Status")),
 	}
 
@@ -142,18 +142,18 @@ func Example() {
 	// 5: Felix:                                  Busy
 	//
 	// People (Name, Email / ID, Age, Status):
-	// Alice (alice@example.com)
+	// Alice <alice@example.com>
 	//   ID: 1591
 	//   Age: 57
 	//   Status: Online
-	// Bob (bob@example.com)
+	// Bob <bob@example.com>
 	//   ID: 122520
 	//   Age: 53
 	//   Status: On Vacation
-	// Eve (eve@example.com)
+	// Eve <eve@example.com>
 	//   Age: 34
 	//   Status: Listening
-	// Mallory (mallory@example.com)
+	// Mallory <mallory@example.com>
 	//   ID: 128
 	//   Age: 29
 	//   Status: Tinkering

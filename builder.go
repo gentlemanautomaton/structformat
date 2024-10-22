@@ -61,6 +61,11 @@ func (b *Builder) WriteField(value string, opts ...fieldformat.Option) {
 	// Combine field format options.
 	field := fieldformat.Combine(opts...)
 
+	// Apply value transformations.
+	if field.Transform != nil {
+		value = field.Transform(value)
+	}
+
 	// Apply defaults.
 	if field.Type == fieldformat.DefaultType {
 		field.Type = fieldformat.Standard
