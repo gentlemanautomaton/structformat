@@ -62,20 +62,20 @@ func (opts Options) Apply(ref *Options) {
 	if opts.Type != DefaultType {
 		ref.Type = opts.Type
 	}
-	if opts.Width > ref.Width {
-		ref.Width = opts.Width
-	}
-	if opts.Padding != "" {
-		ref.Padding = opts.Padding
-	}
-	if opts.Alignment != DefaultAlignment {
-		ref.Alignment = opts.Alignment
-	}
 	if opts.Include {
 		ref.Include = true
 	}
 	if opts.Exclude {
 		ref.Exclude = true
+	}
+	if opts.Alignment != DefaultAlignment {
+		ref.Alignment = opts.Alignment
+	}
+	if opts.Width > ref.Width {
+		ref.Width = opts.Width
+	}
+	if opts.Padding != "" {
+		ref.Padding = opts.Padding
 	}
 }
 
