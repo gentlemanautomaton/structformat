@@ -54,10 +54,10 @@ func (p Person) Format(format PersonFormat) string {
 		format.Status,
 	))
 
-	builder.WriteField(p.ID, fieldformat.Primary, format.ID)
-	builder.WriteField(p.Name, format.Name)
+	builder.WritePrimary(p.ID, format.ID)
+	builder.WriteStandard(p.Name, format.Name)
 	builder.WriteField(p.Age.String(), fieldformat.Label("Age"), fieldformat.Note, format.Age)
-	builder.WriteField(p.Email, fieldformat.Note, format.Email)
+	builder.WriteNote(p.Email, format.Email)
 	builder.Divide()
 	builder.WriteField(p.Status, format.Status)
 
