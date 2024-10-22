@@ -10,6 +10,10 @@ type Option interface {
 
 // Options holds a set of formatting options for a field.
 type Options struct {
+	// Group is the name of the field group the field belongs to.
+	// Each field group will be divided from those adjacent to it.
+	Group string
+
 	// Label is a label for the field.
 	Label string
 
@@ -64,6 +68,9 @@ func (opts *Options) AdjustWidth(width int) {
 
 // Apply copies all non-default options in opts to ref.
 func (opts Options) Apply(ref *Options) {
+	if opts.Group != "" {
+		ref.Group = opts.Group
+	}
 	if opts.Label != "" {
 		ref.Label = opts.Label
 	}
@@ -96,6 +103,11 @@ func (opts Options) Apply(ref *Options) {
 // String returns a string representation of the options.
 func (opts Options) String() string {
 	var out string
+
+	// Group
+	if opts.Group != "" {
+		out += "G"
+	}
 
 	// Label
 	if opts.Label != "" {

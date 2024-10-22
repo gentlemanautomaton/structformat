@@ -14,8 +14,10 @@ type Builder struct {
 	builder strings.Builder
 	rules   Rules
 
-	lastWritten fieldformat.Type
-	padding     fieldpadding.Spec
+	lastTypeWritten  fieldformat.Type
+	lastGroupWritten string
+
+	padding fieldpadding.Spec
 
 	lastSkipped fieldformat.Type
 	skipped     int
@@ -124,10 +126,10 @@ func (b *Builder) WriteField(value string, opts ...fieldformat.Option) {
 	}
 
 	// Complete any tasks related to the last field that was written.
-	b.prepareFor(field.Type)
+	b.prepareFor(field.Type, field.Group)
 
 	// Update information and state after this field has been written.
-	defer b.completeFor(field.Type)
+	defer b.completeFor(field.Type, field.Group)
 
 	// Calculate the padding needed for the value, if any.
 	padding := fieldpadding.New(field.Width-len(value), field.Padding)
@@ -169,18 +171,22 @@ func (b *Builder) Divide() {
 }
 
 // prepareFor is called before a field value is written.
-func (b *Builder) prepareFor(next fieldformat.Type) {
-	if next == fieldformat.Block {
-		if b.lastWritten == fieldformat.Note {
+func (b *Builder) prepareFor(nextType fieldformat.Type, nextGroup string) {
+	if b.lastGroupWritten != nextGroup {
+		b.Divide()
+	}
+
+	if nextType == fieldformat.Block {
+		if b.lastTypeWritten == fieldformat.Note {
 			b.builder.WriteString(")")
 		}
-		if b.lastWritten != fieldformat.DefaultType {
+		if b.lastTypeWritten != fieldformat.DefaultType {
 			b.builder.WriteString("\n")
 		}
 		return
 	}
 
-	switch b.lastWritten {
+	switch b.lastTypeWritten {
 	case fieldformat.Primary:
 		b.builder.WriteString(":")
 		b.finishPadding()
@@ -192,10 +198,11 @@ func (b *Builder) prepareFor(next fieldformat.Type) {
 		b.finishPadding()
 		b.builder.WriteString(b.fieldSeparator())
 	case fieldformat.Note:
-		if next == fieldformat.Note {
+		if nextType == fieldformat.Note {
 			if b.divided {
 				b.builder.WriteString("):")
 				b.finishPadding()
+				b.builder.WriteString(b.fieldSeparator())
 			} else {
 				b.builder.WriteString(",")
 				b.finishPadding()
@@ -218,8 +225,8 @@ func (b *Builder) prepareFor(next fieldformat.Type) {
 		b.builder.WriteString(strings.Repeat(" ", b.skipped))
 	}
 
-	if next == fieldformat.Note {
-		if b.lastWritten != fieldformat.Note || b.divided {
+	if nextType == fieldformat.Note {
+		if b.lastTypeWritten != fieldformat.Note || b.divided {
 			b.builder.WriteString("(")
 		}
 	}
@@ -229,9 +236,10 @@ func (b *Builder) prepareFor(next fieldformat.Type) {
 //
 // It updates information about the last field written, skip state and
 // division state.
-func (b *Builder) completeFor(last fieldformat.Type) {
-	// Record information about the value that is about to be written.
-	b.lastWritten = last
+func (b *Builder) completeFor(lastType fieldformat.Type, lastGroup string) {
+	// Record information about the last field that has been written.
+	b.lastTypeWritten = lastType
+	b.lastGroupWritten = lastGroup
 
 	// Clear out old skip values.
 	b.lastSkipped = fieldformat.DefaultType
@@ -246,7 +254,7 @@ func (b *Builder) writeBlocks() {
 	for _, field := range b.blocks {
 		// Complete any tasks related to the last field that was written.
 		// This will also add a newline before the impending block.
-		b.prepareFor(fieldformat.Block)
+		b.prepareFor(fieldformat.Block, field.Options.Group)
 
 		// If an indent has been specified for the block, add it.
 		indent := strings.Repeat(" ", field.Options.Indent)
@@ -277,7 +285,7 @@ func (b *Builder) writeBlocks() {
 		}
 
 		// Update information and state after this field has been written.
-		b.completeFor(fieldformat.Block)
+		b.completeFor(fieldformat.Block, field.Options.Group)
 	}
 
 	// Reset the pending blocks list after writing them.
@@ -293,9 +301,9 @@ func (b *Builder) finishPadding() {
 
 func (b *Builder) finish() {
 	b.writeBlocks()
-	if b.lastWritten == fieldformat.Note {
+	if b.lastTypeWritten == fieldformat.Note {
 		b.builder.WriteString(")")
-		b.lastWritten = fieldformat.Standard
+		b.lastTypeWritten = fieldformat.Standard
 	}
 }
 

@@ -77,6 +77,11 @@ func (gen formatGenerator) Generate() Format {
 
 func (gen formatGenerator) generateFieldOptions() fieldformat.Options {
 	var opts []fieldformat.Option
+
+	if roll := gen.rand.IntN(100); roll < 10 {
+		opts = append(opts, fieldformat.Group("*"))
+	}
+
 	switch roll := gen.rand.IntN(5); roll {
 	default:
 		opts = append(opts, fieldformat.Standard)

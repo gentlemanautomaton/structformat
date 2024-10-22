@@ -7,56 +7,56 @@ import (
 )
 
 const expectedBuilderTestResult = `
-00:  N.LNE.NI.S.NI.S: (C0, E0)
-01:  NE.SE.LNE.S.N.N: D1 (E1, F1)
-02:     LN.P.S.P.S.S: (Label: A2) B2: C2 D2: E2 F2
-03:    N.P.P.LNI.N.P: (Label: D3)
-04:   N.LNI.P.N.P.LN: (Label: B4)
-05: SI.SI.S.NI.LNI.S: A5 B5 (D5, Label: E5)
-06:    N.P.S.N.LNE.S: (A6) B6: C6 (D6) F6
-07:    SI.N.N.N.SE.S: A7
-08:     N.S.P.S.N.PE: (A8) B8 C8: D8 (E8)
-09:    LN.P.LN.P.N.P: (Label: A9) B9: (Label: C9) D9: (E9) F9
-10:    S.S.P.PI.SI.S: D10: E10
-11:    LN.S.PE.N.N.N: (Label: A11) B11 (D11, E11, F11)
-12:   LN.S.N.N.SE.NI: (F12)
-13:  SI.N.SI.LNI.S.S: A13 C13 (Label: D13)
-14:   N.PE.S.S.LN.NI: (F14)
-15:    N.P.SI.SI.S.S: C15 D15
-16:   N.NI.SE.S.S.NE: (B16)
-17:  LN.S.N.NI.N.LNE: (D17)
-18:    LN.SE.S.S.P.N: (Label: A18) C18 D18 E18: (F18)
-19:   S.PI.S.S.NI.LN: B19: (E19)
-20:   PE.S.SI.SE.N.P: C20
-21:    P.NI.N.NI.P.N: (B21, D21)
-22:     S.S.S.N.S.LN: A22 B22 C22 (D22) E22 (Label: F22)
-23:     S.N.S.S.SE.S: A23 (B23) C23 D23 F23
-24:  LN.S.S.PI.PI.PI: D24: E24: F24
-25:   NI.S.N.P.LNE.N: (A25)
-26:   N.LNI.LN.S.P.N: (Label: B26)
-27:  P.PI.S.NE.LNI.S: B27: (Label: E27)
-28:    PI.S.SI.P.S.P: A28: C28
-29:    S.P.N.SI.S.NE: D29
-30:    S.P.S.SI.N.PI: D30 F30
-31:   S.SE.PE.NE.S.N: A31 E31 (F31)
-32:     N.S.S.S.PI.N: E32
-33:     P.SE.S.S.P.N: A33: C33 D33 E33: (F33)
-34:   N.SE.N.SI.LN.S: D34
-35:     N.P.SI.P.S.S: C35
-36:   PI.N.NI.S.S.SI: A36: (C36) F36
-37:   S.P.SI.PE.SI.S: C37 E37
-38:     S.S.N.PE.S.N: A38 B38 (C38) E38 (F38)
-39:   S.S.SI.SE.S.NI: C39 (F39)
-40:    SI.NI.N.N.S.N: A40 (B40)
-41:    N.LN.N.P.NE.S: (A41, Label: B41, C41) D41: F41
-42:    PE.NI.S.S.S.N: (B42)
-43:     N.P.SI.S.N.P: C43
-44:     N.S.S.S.S.NI: (F44)
-45:  S.PE.N.SI.NI.LN: D45 (E45)
-46:    P.N.N.LN.SE.P: A46: (B46, C46, Label: D46) F46
-47:    N.SI.P.N.N.LN: B47
-48:    S.S.NI.P.N.NI: (C48, F48)
-49:     P.S.S.SI.S.P: D49
+00:    N.S.SI.NI.N.GSE: C0 (D0)
+01:      SE.N.N.S.LN.P: (B1, C1) D1 (Label: E1) F1
+02:      S.P.P.LNI.P.N: (Label: D2)
+03:     LNI.N.P.S.SI.S: (Label: A3) E3
+04:      PI.SI.S.P.S.N: A4: B4
+05:    SI.SI.N.P.LNE.P: A5 B5
+06:      LN.PI.N.S.N.S: B6
+07:      N.P.LN.P.SI.S: E7
+08:     LN.S.S.S.P.GPE: (Label: A8) B8 C8 D8 E8
+09:  N.NI.GNI.S.LNI.SI: (B9): (C9): (Label: E9) F9
+10:     LN.P.SI.S.S.PI: C10 F10
+11:    S.PE.SI.SE.N.PI: C11 F11
+12:      S.S.LN.LN.N.S: A12 B12 (Label: C12, Label: D12, E12) F12
+13:      P.S.PI.GS.S.N: C13
+14: NI.GLN.LN.GNE.NI.S: (A14, E14)
+15:      N.N.N.LN.N.LN: (A15, B15, C15, Label: D15, E15, Label: F15)
+16:       N.S.S.P.LN.P: (A16) B16 C16 D16: (Label: E16) F16
+17:   GS.S.GN.S.PI.LNE: E17
+18:      N.NI.GN.N.S.N: (B18)
+19:    P.N.SE.NE.SI.NI: E19 (F19)
+20:      PI.P.N.N.NE.S: A20
+21:     PE.N.LNI.N.S.S: (Label: C21)
+22:    GNE.GN.N.PE.S.S: (B22): (C22) E22 F22
+23:     S.SE.GLN.N.N.S: A23: (Label: C23): (D23, E23) F23
+24:       NI.S.N.P.S.S: (A24)
+25:      NI.N.S.S.SE.P: (A25)
+26:    S.GSI.GN.N.PE.S: B26
+27:    SI.S.S.GS.LN.NI: A27 (F27)
+28:      N.LN.N.NI.N.S: (D28)
+29:    S.PE.LNI.S.GN.N: (Label: C29)
+30:    SI.S.P.P.LN.GLN: A30
+31:      N.S.S.PI.NI.S: D31: (E31)
+32:       P.N.LN.S.N.S: A32: (B32, Label: C32) D32 (E32) F32
+33:     N.P.S.GLN.PI.N: E33
+34:    NI.PI.S.GSI.P.N: (A34) B34: D34
+35:       S.N.N.GN.S.P: A35 (B35, C35): (D35): E35 F35
+36:    NE.NE.GS.P.N.GP: C36: D36: (E36): F36
+37:       S.S.NI.S.S.S: (C37)
+38:       NI.S.S.S.N.P: (A38)
+39:       P.N.LN.P.N.S: A39: (B39, Label: C39) D39: (E39) F39
+40:    LN.P.NI.SE.SI.S: (C40) E40
+41:    S.S.NI.LN.S.GSE: (C41)
+42:    GS.SE.S.GN.SI.S: E42
+43:      S.P.S.SE.SI.N: E43
+44:      S.N.LNI.P.N.S: (Label: C44)
+45:     S.S.GN.S.SI.LN: E45
+46:       S.GS.N.S.P.P: A46: B46: (C46) D46 E46: F46
+47:       N.N.S.N.P.NE: (A47, B47) C47 (D47) E47
+48:       P.LN.S.S.S.N: A48: (Label: B48) C48 D48 E48 (F48)
+49:    N.S.N.LN.LNI.PI: (Label: E49) F49
 `
 
 func TestBuilder(t *testing.T) {
@@ -68,7 +68,7 @@ func TestBuilder(t *testing.T) {
 		record := makeRecord(i)
 		format := formats.Generate()
 		result := record.Format(format)
-		results = append(results, fmt.Sprintf("%02d: %16s: %s", i, format, result))
+		results = append(results, fmt.Sprintf("%02d: %18s: %s", i, format, result))
 	}
 	output := strings.Join(results, "\n")
 	if output != strings.Trim(expectedBuilderTestResult, "\n") {

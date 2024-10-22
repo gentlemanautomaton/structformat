@@ -1,5 +1,10 @@
 package fieldformat
 
+// Group returns a field format option with the given group.
+func Group(group string) Options {
+	return Options{Group: group}
+}
+
 // Label returns a field format option with the given label.
 func Label(label string) Options {
 	return Options{Label: label}
