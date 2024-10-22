@@ -115,7 +115,7 @@ func Example() {
 	// Print all fields, with most fields shown as indented blocks.
 	allWithBlocks := PersonFormat{
 		ID:     fieldformat.Combine(fieldformat.Block, fieldformat.Indent(2), fieldformat.Label("ID")),
-		Age:    fieldformat.Combine(fieldformat.Block, fieldformat.Indent(2), fieldformat.Label("Age")),
+		Age:    fieldformat.Combine(fieldformat.Block, fieldformat.Indent(2), fieldformat.Label("Age"), fieldformat.NumericSuffix("year old", "years old")),
 		Email:  fieldformat.Combine(fieldformat.Standard, fieldformat.Wrap("<", ">")),
 		Status: fieldformat.Combine(fieldformat.Block, fieldformat.Indent(2), fieldformat.Label("Status")),
 	}
@@ -144,22 +144,22 @@ func Example() {
 	// People (Name, Email / ID, Age, Status):
 	// Alice <alice@example.com>
 	//   ID: 1591
-	//   Age: 57
+	//   Age: 57 years old
 	//   Status: Online
 	// Bob <bob@example.com>
 	//   ID: 122520
-	//   Age: 53
+	//   Age: 53 years old
 	//   Status: On Vacation
 	// Eve <eve@example.com>
-	//   Age: 34
+	//   Age: 34 years old
 	//   Status: Listening
 	// Mallory <mallory@example.com>
 	//   ID: 128
-	//   Age: 29
+	//   Age: 29 years old
 	//   Status: Tinkering
 	// Doug
 	//   ID: 172340
-	//   Age: 1
+	//   Age: 1 year old
 	// Felix
 	//   Status: Busy
 }
