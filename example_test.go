@@ -112,6 +112,19 @@ func Example() {
 		fmt.Printf("%d: %s\n", i, person.Format(allExceptID))
 	}
 
+	// Print all fields, with most fields shown as indented blocks.
+	allWithBlocks := PersonFormat{
+		ID:     fieldformat.Combine(fieldformat.Block, fieldformat.Indent(2), fieldformat.Label("ID")),
+		Age:    fieldformat.Combine(fieldformat.Block, fieldformat.Indent(2), fieldformat.Label("Age")),
+		Email:  fieldformat.Note.Options(),
+		Status: fieldformat.Combine(fieldformat.Block, fieldformat.Indent(2), fieldformat.Label("Status")),
+	}
+
+	fmt.Println("\nPeople (Name, Email / ID, Age, Status):")
+	for _, person := range people {
+		fmt.Println(person.Format(allWithBlocks))
+	}
+
 	// Output:
 	// People (ID, Email):
 	//   1591: alice@example.com
@@ -127,4 +140,26 @@ func Example() {
 	// 3: Mallory (Age: 29, mallory@example.com): Tinkering
 	// 4: Doug    (Age: 01)
 	// 5: Felix:                                  Busy
+	//
+	// People (Name, Email / ID, Age, Status):
+	// Alice (alice@example.com)
+	//   ID: 1591
+	//   Age: 57
+	//   Status: Online
+	// Bob (bob@example.com)
+	//   ID: 122520
+	//   Age: 53
+	//   Status: On Vacation
+	// Eve (eve@example.com)
+	//   Age: 34
+	//   Status: Listening
+	// Mallory (mallory@example.com)
+	//   ID: 128
+	//   Age: 29
+	//   Status: Tinkering
+	// Doug
+	//   ID: 172340
+	//   Age: 1
+	// Felix
+	//   Status: Busy
 }

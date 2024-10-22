@@ -9,3 +9,8 @@ func Label(label string) Options {
 func Width(width int) Options {
 	return Options{Width: width}
 }
+
+// Indent returns a field format option with the given block indent.
+func Indent(indent int) Options {
+	return Options{Indent: indent}
+}

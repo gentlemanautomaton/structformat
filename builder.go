@@ -21,6 +21,8 @@ type Builder struct {
 	skipped     int
 
 	divided bool
+
+	blocks []pendingField
 }
 
 // ApplyRules applies the given rules to the builder.
@@ -49,6 +51,11 @@ func (b *Builder) WriteNote(value string, opts ...fieldformat.Option) {
 	b.WriteField(value, append([]fieldformat.Option{fieldformat.Note}, opts...)...)
 }
 
+// WriteBlock writes a block field to the builder.
+func (b *Builder) WriteBlock(value string, opts ...fieldformat.Option) {
+	b.WriteField(value, append([]fieldformat.Option{fieldformat.Block}, opts...)...)
+}
+
 // WriteField writes a field to the builder.
 func (b *Builder) WriteField(value string, opts ...fieldformat.Option) {
 	// Combine field format options.
@@ -64,9 +71,21 @@ func (b *Builder) WriteField(value string, opts ...fieldformat.Option) {
 		return
 	}
 
-	// Check whether this field is missing.
+	// If the field is a block, add it to the pending blocks list and exit.
+	if field.Type == fieldformat.Block {
+		// Only non-empty blocks needs to be processed.
+		if value != "" {
+			b.blocks = append(b.blocks, pendingField{
+				Value:   value,
+				Options: field,
+			})
+		}
+		return
+	}
+
+	// Check whether this non-block field is missing.
 	if value == "" {
-		// If the value is missing and the it doesn't have a fixed width,
+		// If the value is missing and or it doesn't have a fixed width,
 		// omit it entirely.
 		if field.Width < 1 {
 			return
@@ -102,18 +121,11 @@ func (b *Builder) WriteField(value string, opts ...fieldformat.Option) {
 	// Complete any tasks related to the last field that was written.
 	b.prepareFor(field.Type)
 
+	// Update information and state after this field has been written.
+	defer b.completeFor(field.Type)
+
 	// Calculate the padding needed for the value, if any.
 	padding := fieldpadding.New(field.Width-len(value), field.Padding)
-
-	// Record information about the value that is about to be written.
-	b.lastWritten = field.Type
-
-	// Clear out old skip values.
-	b.lastSkipped = fieldformat.DefaultType
-	b.skipped = 0
-
-	// Reset the divided state.
-	b.divided = false
 
 	// Write the field label, if present.
 	if field.Label != "" {
@@ -151,7 +163,18 @@ func (b *Builder) Divide() {
 	b.divided = true
 }
 
+// prepareFor is called before a field value is written.
 func (b *Builder) prepareFor(next fieldformat.Type) {
+	if next == fieldformat.Block {
+		if b.lastWritten == fieldformat.Note {
+			b.builder.WriteString(")")
+		}
+		if b.lastWritten != fieldformat.DefaultType {
+			b.builder.WriteString("\n")
+		}
+		return
+	}
+
 	switch b.lastWritten {
 	case fieldformat.Primary:
 		b.builder.WriteString(":")
@@ -197,6 +220,65 @@ func (b *Builder) prepareFor(next fieldformat.Type) {
 	}
 }
 
+// completeFor is called after a field value has been written.
+//
+// It updates information about the last field written, skip state and
+// division state.
+func (b *Builder) completeFor(last fieldformat.Type) {
+	// Record information about the value that is about to be written.
+	b.lastWritten = last
+
+	// Clear out old skip values.
+	b.lastSkipped = fieldformat.DefaultType
+	b.skipped = 0
+
+	// Reset the divided state.
+	b.divided = false
+}
+
+// writeBlocks writes any blocks that have been deferred.
+func (b *Builder) writeBlocks() {
+	for _, field := range b.blocks {
+		// Complete any tasks related to the last field that was written.
+		// This will also add a newline before the impending block.
+		b.prepareFor(fieldformat.Block)
+
+		// If an indent has been specified for the block, add it.
+		indent := strings.Repeat(" ", field.Options.Indent)
+		if field.Options.Indent > 0 {
+			b.builder.WriteString(indent)
+		}
+
+		// Write the field label, if present.
+		if field.Options.Label != "" {
+			b.builder.WriteString(field.Options.Label)
+			b.builder.WriteString(": ")
+		}
+
+		// Write the field value.
+		// TODO: Consider reformatting lines that exceed field.Options.Width
+		if indent != "" {
+			// Add the indent to the beginning of each line.
+			for i, line := range strings.Split(field.Value, "\n") {
+				if i > 0 {
+					b.builder.WriteString("\n")
+					b.builder.WriteString(indent)
+				}
+				b.builder.WriteString(line)
+			}
+			//b.builder.WriteString(strings.ReplaceAll(field.Value, "\n", strings.Repeat(" ", field.Options.Indent)+"\n"))
+		} else {
+			b.builder.WriteString(field.Value)
+		}
+
+		// Update information and state after this field has been written.
+		b.completeFor(fieldformat.Block)
+	}
+
+	// Reset the pending blocks list after writing them.
+	b.blocks = b.blocks[:0]
+}
+
 func (b *Builder) finishPadding() {
 	s := b.padding.String()
 	if s != "" {
@@ -205,6 +287,7 @@ func (b *Builder) finishPadding() {
 }
 
 func (b *Builder) finish() {
+	b.writeBlocks()
 	if b.lastWritten == fieldformat.Note {
 		b.builder.WriteString(")")
 		b.lastWritten = fieldformat.Standard
@@ -216,4 +299,9 @@ func (b *Builder) fieldSeparator() string {
 		return b.rules.FieldSeparator
 	}
 	return " "
+}
+
+type pendingField struct {
+	Value   string
+	Options fieldformat.Options
 }

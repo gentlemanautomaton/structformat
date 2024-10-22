@@ -29,6 +29,10 @@ type Options struct {
 	// Width is the minimum width of the field.
 	Width int
 
+	// Indent is the indent for block fields. If the field contains multiple
+	// lines, the indent will also be prepended to each line.
+	Indent int
+
 	// Padding is the padding used to fill field values that are less than
 	// the minimum width. If an empty string is specified, the default padding
 	// character (a space) will be used.
@@ -73,6 +77,9 @@ func (opts Options) Apply(ref *Options) {
 	}
 	if opts.Width > ref.Width {
 		ref.Width = opts.Width
+	}
+	if opts.Indent > ref.Indent {
+		ref.Indent = opts.Indent
 	}
 	if opts.Padding != "" {
 		ref.Padding = opts.Padding
@@ -121,6 +128,11 @@ func (opts Options) String() string {
 	// Width
 	if opts.Width > 0 {
 		out += "W" + strconv.Itoa(opts.Width)
+	}
+
+	// Indent
+	if opts.Indent > 0 {
+		out += "I" + strconv.Itoa(opts.Indent)
 	}
 
 	return out

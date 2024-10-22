@@ -16,6 +16,10 @@ const (
 	// Notes are wrapped in parentheses. Successive notes are separated
 	// by commas.
 	Note
+
+	// Block fields get their own lines, are separated from other fields by a
+	// newline character, and are always written after all non-block fields.
+	Block
 )
 
 // Apply will set the field format type for ref.
